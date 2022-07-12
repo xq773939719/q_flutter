@@ -1,4 +1,4 @@
-
+import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'list.dart';
 
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter工程',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: Colors.white,
       ),
       home: const MyHomePage(title: '首页'),
     );
@@ -23,32 +23,65 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
   final String title;
+
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
+  late Set<WordPair> savedData;
   late RandomWords randomWords;
 
   void onRightButtonClick() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        // 新增如下20行代码 ...
+        builder: (BuildContext context) {
+          const biggerFont = TextStyle(fontSize: 16);
+          final Iterable<ListTile> tiles = savedData.map(
+            (WordPair pair) {
+              return ListTile(
+                title: Text(
+                  pair.asPascalCase,
+                  style: biggerFont,
+                ),
+              );
+            },
+          );
+          final List<Widget> divided = ListTile.divideTiles(
+            context: context,
+            tiles: tiles,
+          ).toList();
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('保存的数据'),
+            ),
+            body: ListView(children: divided),
+          );
+        },
+      ),
+    );
+  }
+
+  void callback(Set<WordPair> data) {
+    savedData = data;
   }
 
   @override
   Widget build(BuildContext context) {
-    const randomWords = RandomWords();
+    randomWords = RandomWords(callback: callback);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
         actions: <Widget>[
-          IconButton(icon: const Icon(Icons.list), onPressed: onRightButtonClick),
+          IconButton(
+              icon: const Icon(Icons.list), onPressed: onRightButtonClick),
         ],
       ),
-      body: const Center(
+      body: Center(
         child: randomWords,
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );

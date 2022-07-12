@@ -3,7 +3,9 @@ import 'package:english_words/english_words.dart';
 import 'package:q_flutter/cell.dart';
 
 class RandomWords extends StatefulWidget {
-  const RandomWords({Key? key}) : super(key: key);
+  final Function callback;
+
+  const RandomWords({Key? key, required this.callback}) : super(key: key);
 
   @override
   State<RandomWords> createState() => _RandomWordsState();
@@ -11,9 +13,7 @@ class RandomWords extends StatefulWidget {
 
 class _RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
-  final _biggerFont = const TextStyle(fontSize: 10);
-
-  saved() { return _saved; }
+  final _biggerFont = const TextStyle(fontSize: 16);
 
   final Set<WordPair> _saved = <WordPair>{};
 
@@ -24,7 +24,7 @@ class _RandomWordsState extends State<RandomWords> {
     } else {
       _saved.remove(value);
     }
-    print(_saved.length);
+    widget.callback(_saved);
   }
 
   @override
