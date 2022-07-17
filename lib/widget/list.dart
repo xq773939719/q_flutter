@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:english_words/english_words.dart';
-import 'package:q_flutter/cell.dart';
+
+import '../material/cell.dart';
 
 class RandomWords extends StatefulWidget {
   final Function callback;
@@ -32,8 +33,6 @@ class _RandomWordsState extends State<RandomWords> {
     return ListView.builder(
       padding: const EdgeInsets.all(16.0),
       itemBuilder: (context, i) {
-        if (i.isOdd) return const Divider();
-
         final index = i ~/ 2;
         if (index >= _suggestions.length) {
           _suggestions.addAll(generateWordPairs().take(10));
